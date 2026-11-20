@@ -1,6 +1,6 @@
 {
   "name": "code-reviewed",
-  "displayName": "Human Review",
+  "displayName": "Human Review — Line by Line",
   "description": "Track reviewed lines, revisit changed code, and share review coverage through Git.",
   "version": "0.6.1",
   "publisher": "LINQe",
@@ -293,7 +293,7 @@
     "viewsWelcome": [
       {
         "view": "codeReviewed.files",
-        "contents": "No pending files match this filter. [Change filter](command:codeReviewed.filter) \u00b7 [Refresh project](command:codeReviewed.refresh)\n\n[Restore ignored paths](command:codeReviewed.restoreIgnored). Binary/generated files and files above tracking limits are excluded.\n[Edit ignore patterns](command:codeReviewed.editIgnorePatterns)"
+        "contents": "No pending files match this filter. [Change filter](command:codeReviewed.filter) · [Refresh project](command:codeReviewed.refresh)\n\n[Restore ignored paths](command:codeReviewed.restoreIgnored). Binary/generated files and files above tracking limits are excluded.\n[Edit ignore patterns](command:codeReviewed.editIgnorePatterns)"
       }
     ],
     "configuration": {
