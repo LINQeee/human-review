@@ -1,0 +1,354 @@
+{
+  "name": "code-reviewed",
+  "displayName": "Human Review",
+  "description": "Track reviewed lines, revisit changed code, and share review coverage through Git.",
+  "version": "0.6.0",
+  "publisher": "local-tools",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "review",
+    "ai",
+    "code review",
+    "reviewed"
+  ],
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": true
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check": "node --check src/core.js && node --check src/extension.js && node --check src/storage.js && node --check src/portable.js && node --check src/project.js && node --check src/tree.js && node --check src/review.js && node --check src/actions.js && node --check src/report.js && node --check src/badge.js && node --check src/ignore.js",
+    "package": "npm run check && npm test && vsce package --no-dependencies --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "3.6.2"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "codeReviewed.mark",
+        "title": "Mark Selected Lines Reviewed",
+        "category": "Human Review",
+        "icon": "$(check)"
+      },
+      {
+        "command": "codeReviewed.unmark",
+        "title": "Mark Selected Lines Unreviewed",
+        "category": "Human Review"
+      },
+      {
+        "command": "codeReviewed.file",
+        "title": "Mark Entire File Reviewed",
+        "category": "Human Review"
+      },
+      {
+        "command": "codeReviewed.clear",
+        "title": "Clear Review for Current File",
+        "category": "Human Review"
+      },
+      {
+        "command": "codeReviewed.next",
+        "title": "Go to Next Unreviewed Line",
+        "category": "Human Review",
+        "icon": "$(arrow-down)"
+      },
+      {
+        "command": "codeReviewed.overview",
+        "title": "Show Unreviewed Project Files",
+        "category": "Human Review"
+      },
+      {
+        "command": "codeReviewed.refresh",
+        "title": "Refresh Project",
+        "category": "Human Review",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "codeReviewed.enableShared",
+        "title": "Enable Cross-PC Review (Git)",
+        "category": "Human Review"
+      },
+      {
+        "command": "codeReviewed.reloadShared",
+        "title": "Reload Shared Review State",
+        "category": "Human Review"
+      },
+      {
+        "command": "codeReviewed.diff",
+        "title": "Compare with Last Review",
+        "category": "Human Review",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "codeReviewed.markNext",
+        "title": "Mark Reviewed and Go to Next Range",
+        "category": "Human Review",
+        "icon": "$(check-all)"
+      },
+      {
+        "command": "codeReviewed.nextProject",
+        "title": "Next Unreviewed Range in Project",
+        "category": "Human Review",
+        "icon": "$(arrow-right)"
+      },
+      {
+        "command": "codeReviewed.ignore",
+        "title": "Ignore File or Folder",
+        "category": "Human Review",
+        "icon": "$(exclude)"
+      },
+      {
+        "command": "codeReviewed.restoreIgnored",
+        "title": "Restore Ignored Paths",
+        "category": "Human Review",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "codeReviewed.filter",
+        "title": "Filter Review Status",
+        "category": "Human Review",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "codeReviewed.undo",
+        "title": "Undo Last Review Action",
+        "category": "Human Review",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "codeReviewed.acceptDeletion",
+        "title": "Mark Deletion Reviewed",
+        "category": "Human Review",
+        "icon": "$(check)"
+      },
+      {
+        "command": "codeReviewed.setupBadge",
+        "title": "Set Up GitHub Review Badge",
+        "category": "Human Review",
+        "icon": "$(github)"
+      },
+      {
+        "command": "codeReviewed.repairBadge",
+        "title": "Repair README Badge",
+        "category": "Human Review",
+        "icon": "$(tools)"
+      },
+      {
+        "command": "codeReviewed.addIgnorePattern",
+        "title": "Add Ignore Pattern",
+        "category": "Human Review"
+      },
+      {
+        "command": "codeReviewed.editIgnorePatterns",
+        "title": "Edit Ignore Patterns",
+        "category": "Human Review"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "codeReviewed.mark",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus && resourceScheme != git && resourceScheme != code-reviewed-snapshot"
+      },
+      {
+        "command": "codeReviewed.next",
+        "key": "ctrl+alt+n",
+        "mac": "cmd+alt+n",
+        "when": "editorTextFocus && resourceScheme != git && resourceScheme != code-reviewed-snapshot"
+      },
+      {
+        "command": "codeReviewed.markNext",
+        "key": "ctrl+alt+enter",
+        "mac": "cmd+alt+enter",
+        "when": "editorTextFocus && resourceScheme != git && resourceScheme != code-reviewed-snapshot"
+      },
+      {
+        "command": "codeReviewed.undo",
+        "key": "ctrl+alt+z",
+        "mac": "cmd+alt+z",
+        "when": "editorTextFocus || focusedView == codeReviewed.files"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "codeReviewed.mark",
+          "group": "codeReviewed@1",
+          "when": "resourceScheme != git && resourceScheme != code-reviewed-snapshot"
+        },
+        {
+          "command": "codeReviewed.unmark",
+          "group": "codeReviewed@2",
+          "when": "resourceScheme != git && resourceScheme != code-reviewed-snapshot"
+        },
+        {
+          "command": "codeReviewed.next",
+          "group": "codeReviewed@3",
+          "when": "resourceScheme != git && resourceScheme != code-reviewed-snapshot"
+        },
+        {
+          "command": "codeReviewed.markNext",
+          "when": "resourceScheme != git && resourceScheme != code-reviewed-snapshot",
+          "group": "codeReviewed@4"
+        },
+        {
+          "command": "codeReviewed.diff",
+          "when": "resourceScheme != git && resourceScheme != code-reviewed-snapshot",
+          "group": "codeReviewed@5"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "codeReviewed.refresh",
+          "when": "view == codeReviewed.files",
+          "group": "navigation"
+        },
+        {
+          "command": "codeReviewed.markNext",
+          "when": "view == codeReviewed.files",
+          "group": "navigation@1"
+        },
+        {
+          "command": "codeReviewed.filter",
+          "when": "view == codeReviewed.files",
+          "group": "navigation@2"
+        },
+        {
+          "command": "codeReviewed.undo",
+          "when": "view == codeReviewed.files",
+          "group": "navigation@3"
+        },
+        {
+          "command": "codeReviewed.setupBadge",
+          "when": "view == codeReviewed.files",
+          "group": "badge"
+        },
+        {
+          "command": "codeReviewed.repairBadge",
+          "when": "view == codeReviewed.files",
+          "group": "badge"
+        },
+        {
+          "command": "codeReviewed.addIgnorePattern",
+          "when": "view == codeReviewed.files",
+          "group": "ignore"
+        },
+        {
+          "command": "codeReviewed.editIgnorePatterns",
+          "when": "view == codeReviewed.files",
+          "group": "ignore"
+        },
+        {
+          "command": "codeReviewed.restoreIgnored",
+          "when": "view == codeReviewed.files",
+          "group": "ignore"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "codeReviewed.diff",
+          "when": "view == codeReviewed.files && viewItem =~ /^review(File|DeletedFile|Deletion|Range)$/",
+          "group": "review@1"
+        },
+        {
+          "command": "codeReviewed.ignore",
+          "when": "view == codeReviewed.files && viewItem =~ /^review(File|Folder|DeletedFile)$/",
+          "group": "review@3"
+        },
+        {
+          "command": "codeReviewed.acceptDeletion",
+          "when": "view == codeReviewed.files && viewItem =~ /^review(Deletion|DeletedFile)$/",
+          "group": "inline"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "codeReviewed.ignore",
+          "when": "resourceScheme == file",
+          "group": "codeReviewed"
+        }
+      ]
+    },
+    "views": {
+      "codeReviewed": [
+        {
+          "id": "codeReviewed.files",
+          "name": "Unreviewed Code"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "codeReviewed.files",
+        "contents": "No pending files match this filter. [Change filter](command:codeReviewed.filter) \u00b7 [Refresh project](command:codeReviewed.refresh)\n\n[Restore ignored paths](command:codeReviewed.restoreIgnored). Binary/generated files and files above tracking limits are excluded.\n[Edit ignore patterns](command:codeReviewed.editIgnorePatterns)"
+      }
+    ],
+    "configuration": {
+      "title": "Human Review",
+      "properties": {
+        "codeReviewed.showBackground": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a subtle background on reviewed lines."
+        },
+        "codeReviewed.maxFileLines": {
+          "type": "number",
+          "default": 20000,
+          "minimum": 100,
+          "maximum": 100000,
+          "description": "Maximum number of lines to track in one file."
+        }
+      }
+    },
+    "colors": [
+      {
+        "id": "codeReviewed.reviewedBackground",
+        "description": "Background of reviewed lines.",
+        "defaults": {
+          "dark": "#73c99112",
+          "light": "#1683470c",
+          "highContrast": "#73c99118"
+        }
+      },
+      {
+        "id": "codeReviewed.reviewedMarker",
+        "description": "Overview ruler marker for reviewed lines.",
+        "defaults": {
+          "dark": "#73c991",
+          "light": "#168347",
+          "highContrast": "#73c991"
+        }
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codeReviewed",
+          "title": "Human Review",
+          "icon": "media/activity.svg"
+        }
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LINQeee/human-review.git"
+  },
+  "homepage": "https://github.com/LINQeee/human-review#readme",
+  "bugs": {
+    "url": "https://github.com/LINQeee/human-review/issues"
+  }
+}
