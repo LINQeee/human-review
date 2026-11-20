@@ -36,8 +36,8 @@ function counts(values) {
   return result;
 }
 
-// A bounded patience-style match: only globally unique, order-preserving lines
-// are carried across an unknown edit. Repeated lines are deliberately invalidated
+// A bounded patience-style match: globally unique, order-preserving lines
+// anchor unknown edits. Repeated lines in changed runs are invalidated
 // rather than assigning a previous review to the wrong occurrence.
 function reconcile(previous, text) {
   previous = normalize(previous);
@@ -68,6 +68,25 @@ function reconcile(previous, text) {
   for (let i = tails.length ? tails[tails.length - 1] : -1; i >= 0; i = links[i]) {
     const pair = pairs[i];
     mapping.set(pair.next, pair.old);
+  }
+  // Preserve matching edges between stable anchors. A changed occurrence count
+  // leaves repeated lines ambiguous, so their review marks are not transferred.
+  const anchors = [...mapping].sort((a, b) => a[0] - b[0]);
+  let oldStart = 0, nextStart = 0;
+  for (const [next, old] of [...anchors, [hashes.length, previous.hashes.length]]) {
+    const oldCounts = counts(previous.hashes.slice(oldStart, old));
+    const nextCounts = counts(hashes.slice(nextStart, next));
+    const matches = (n, o) => hashes[n] === previous.hashes[o]
+      && oldCounts.get(hashes[n]) === nextCounts.get(hashes[n]);
+    let leftNext = nextStart, leftOld = oldStart;
+    while (leftNext < next && leftOld < old && matches(leftNext, leftOld)) {
+      mapping.set(leftNext++, leftOld++);
+    }
+    let rightNext = next - 1, rightOld = old - 1;
+    while (rightNext >= leftNext && rightOld >= leftOld && matches(rightNext, rightOld)) {
+      mapping.set(rightNext--, rightOld--);
+    }
+    oldStart = old + 1; nextStart = next + 1;
   }
   return evolve(previous, hashes, mapping, text);
 }

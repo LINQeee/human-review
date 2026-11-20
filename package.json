@@ -2,7 +2,7 @@
   "name": "code-reviewed",
   "displayName": "Human Review — Line by Line",
   "description": "Track reviewed lines, revisit changed code, and share review coverage through Git.",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "publisher": "LINQe",
   "license": "MIT",
   "engines": {

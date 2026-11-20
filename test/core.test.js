@@ -116,3 +116,15 @@ test('whole-buffer replacement preserves unique unchanged lines', () => {
 test('line-ending-only buffer replacement preserves review', () => {
   assert.deepEqual(applyChanges(reviewed('a\nb'), 'a\r\nb', [edit(0, 0, 1, 1, 'a\r\nb')]).reviewed, [true, true]);
 });
+test('external changes preserve unchanged repeated runs between anchors', () => {
+  const before = 'function a() {\n  first();\n}\nfunction b() {\n  second();\n}\nfunction c() {\n  third();\n}';
+  const after = before.replace('second()', 'updated()');
+  const record = reconcile(reviewed(before), after);
+  assert.deepEqual(record.reviewed, [true, true, true, true, false, true, true, true, true]);
+});
+test('full-buffer replacements preserve partial marks in unchanged repeated runs', () => {
+  const before = 'a\nx\nx\nb\ny\nc\nx\nx\nd';
+  const flags = [true, true, false, true, true, true, false, true, true];
+  const record = applyChanges(reviewed(before, flags), before.replace('y', 'changed'), [edit(0, 0, 8, 1, before.replace('y', 'changed'))]);
+  assert.deepEqual(record.reviewed, [true, true, false, true, false, true, false, true, true]);
+});

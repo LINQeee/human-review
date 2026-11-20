@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.2
+
+- Preserve review marks on unchanged repeated lines between stable anchors after external edits and full-buffer replacements.
+
 ## 0.6.1
 
 - Set the Marketplace publisher to LINQe.
