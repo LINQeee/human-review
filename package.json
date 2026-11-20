@@ -2,8 +2,8 @@
   "name": "code-reviewed",
   "displayName": "Human Review",
   "description": "Track reviewed lines, revisit changed code, and share review coverage through Git.",
-  "version": "0.6.0",
-  "publisher": "local-tools",
+  "version": "0.6.1",
+  "publisher": "LINQe",
   "license": "MIT",
   "engines": {
     "vscode": "^1.96.0"
@@ -33,7 +33,7 @@
     "package": "npm run check && npm test && vsce package --no-dependencies --allow-missing-repository"
   },
   "devDependencies": {
-    "@vscode/vsce": "3.6.2"
+    "@vscode/vsce": "4.1.1"
   },
   "contributes": {
     "commands": [

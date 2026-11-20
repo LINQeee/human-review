@@ -60,7 +60,7 @@ Press `F5` in VS Code to launch an Extension Development Host. Runtime code is C
 
 ## Compatibility
 
-The extension ID remains `local-tools.code-reviewed`, so this release updates existing installations. Review marks and exclusions from earlier versions are retained. Review notes have been removed and are discarded when old state is loaded.
+The Marketplace extension ID is `LINQe.code-reviewed`. Before switching from the local `local-tools.code-reviewed` build, run **Enable Cross-PC Review (Git)** in the old extension to save your review state. Disable the old extension, install the new one, then run **Reload Shared Review State**. Local-only state belongs to the old extension ID; shared review marks and exclusions are retained. Review notes have been removed and are discarded when old state is loaded.
 
 ## License
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+
+- Set the Marketplace publisher to LINQe.
+- Add manual publishing through GitHub Trusted Publishing.
+- Document migration from the local extension ID.
+
 ## 0.6.0
 
 - Rename the interface to Human Review; retain the extension ID and saved reviews.
